@@ -1,19 +1,34 @@
-from flask import Flask, render_template
-import datetime
-import random
-# initialize object
-app = Flask(__name__)
+# Libraries importing
+import numpy as np
+from flask import Flask, request, jsonify, render_template
+import pickle
 
-@app.route('/')
+# Flask creation
+flask_app = Flask(__name__)
+
+
+
+# Loading home html
+@flask_app.route("/")
 def home():
-    random_number = random.randint(1,10)
-    current_year = datetime.datetime.now().year
-    return render_template("index.html", year = current_year)
+    return render_template("index.html")
 
 
+@flask_app.route("/PredictRegion", methods=["POST"])
+def predict():
+    # Grab requested values, convert to float
+    float_features = [float(x) for x in request.form.values()]
+    # Convert into list of np array
+    features = [np.array(float_features)]
+    # Run the model and predict outcome
+
+    prediction = str(prediction[0])
+    # load template and print out answer
+    return render_template(
+        "index.html",
+        prediction_text="The Region of this house is {}.".format(prediction),
+    )
 
 
-
-# run app, turn on debug
-if __name__=="__main__":
-    app.run(debug=True)
+if __name__ == "__main__":
+    flask_app.run(debug=True)
